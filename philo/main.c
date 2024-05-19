@@ -6,8 +6,17 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 16:45:34 by yxu               #+#    #+#             */
-/*   Updated: 2024/05/11 16:45:49 by yxu              ###   ########.fr       */
+/*   Updated: 2024/05/19 13:24:00 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	main(int argc, char **argv)
+{
+	t_rules	rules;
+
+	rules = parse_arguments(argc, argv);
+	(void)rules;
+	return (0);
+}
