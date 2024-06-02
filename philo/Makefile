@@ -1,5 +1,5 @@
 NAME	= philo
-SRCS	= main.c utilities.c process.c
+SRCS	= main.c utils.c process.c
 OBJS	= $(SRCS:.c=.o)
 CC		= cc -Wall -Wextra -Werror -I.
 
@@ -9,8 +9,8 @@ CC		= cc -Wall -Wextra -Werror -I.
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(OBJS) -o $(NAME)
-# 	$(CC) $(OBJS) -o $(NAME) -fsanitize=address
+# $(CC) $(OBJS) -o $(NAME)
+	$(CC) $(OBJS) -o $(NAME) -fsanitize=address
 
 clean:
 	rm -rf $(OBJS)
