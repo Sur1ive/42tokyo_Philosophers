@@ -1,10 +1,7 @@
 NAME	= philo
-SRCS	= main.c utils.c process.c
+SRCS	= main.c utils.c lib.c init.c error.c
 OBJS	= $(SRCS:.c=.o)
 CC		= cc -Wall -Wextra -Werror -I.
-
-# %.o: %.c
-# 	$(CC) -Wall -Wextra -Werror -Iincludes -c $< -o $@ -fsanitize=address -g
 
 all: $(NAME)
 

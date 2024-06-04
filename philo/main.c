@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
+/*   By: yxu <yxu@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 16:45:34 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/02 21:30:44 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/04 15:42:52 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,29 +55,19 @@
 
 int	main(int argc, char **argv)
 {
+	t_game			game;
 	t_rules			rules;
-	pthread_t		main_thread;
-	pthread_t		*philos;
-	pthread_mutex_t	*forks;
-	int				i;
+	// pthread_t		main_thread;
+	// int				i;
 
 	rules = parse_arguments(argc, argv);
-	philos = (pthread_t *)malloc(sizeof(pthread_t) * *rules.num_of_philos);
-	forks = (pthread_mutex_t *)
-		malloc(sizeof(pthread_mutex_t) * (*rules.num_of_philos - 1));
-	i = 0;
-	while (i < *rules.num_of_philos - 1)
-		pthread_mutex_init(&forks[i], NULL);
-	i = 0;
-	while (i < *rules.num_of_philos)
-		pthread_create(&philos[i++], NULL, philo_life, NULL);
-	i = 0;
-	while (i < *rules.num_of_philos)
-		pthread_join(philos[i], NULL);
-	free(philos);
-	free(forks);
-	i = 0;
-	while (i < *rules.num_of_philos - 1)
-		pthread_mutex_destroy(&forks[i]);
+	init_game(&game, &rules);
+	// i = 0;
+	// while (i < *rules.num_of_philos)
+	// 	pthread_create(&philos[i++], NULL, philo_life, NULL);
+	// i = 0;
+	// while (i < *rules.num_of_philos)
+	// 	pthread_join(philos[i], NULL);
+	free_game(&game);
 	return (0);
 }
