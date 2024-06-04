@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 15:39:58 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/04 15:39:03 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/04 16:24:22 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,13 @@
 # define MAX_PHILOS 1000
 # define NOT_DEFINED -1
 # define FALSE 0
-# define FAILURE 0
+# define SUCCESS 0
 # define TRUE 1
-# define SUCCESS 1
-# define MALLOC_ERROR 1
-# define INVALID_ARGUMENTS 2
-# define GET_TIME_FAILURE 4
-# define TOO_MANY_PHILOS 5
-# define FAIL_TO_INIT 6
+# define FAILURE 1
+# define INVALID_ARGUMENTS 1
+# define TOO_MANY_PHILOS 2
+# define FAIL_TO_INIT 3
+# define RUNTIME_ERROR 4
 
 typedef unsigned long t_milliseconds;
 

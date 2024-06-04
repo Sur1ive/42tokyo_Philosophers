@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:37:50 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/04 15:39:30 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/04 16:39:10 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ t_rules	parse_arguments(int argc, char **argv)
 static t_fork	*init_forks(int num)
 {
 	t_fork	*forks;
-	int	i;
+	int		i;
 
 	i = 0;
 	forks = (t_fork *)malloc(sizeof(t_fork) * num);
@@ -49,7 +49,11 @@ static t_fork	*init_forks(int num)
 		return (NULL);
 	while (i < num)
 	{
-		pthread_mutex_init(&forks[i].mutex, NULL);
+		if (pthread_mutex_init(&forks[i].mutex, NULL))
+		{
+			free_forks(i, forks);
+			return (NULL);
+		}
 		forks[i++].is_available = 1;
 	}
 	return (forks);
