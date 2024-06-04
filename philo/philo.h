@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yxu <yxu@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 15:39:58 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/04 16:24:22 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/04 21:34:28 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@
 # define FAIL_TO_INIT 3
 # define RUNTIME_ERROR 4
 
-typedef unsigned long t_milliseconds;
+struct					s_game;
+typedef unsigned long	t_milliseconds;
 
 typedef struct s_gamerules
 {
@@ -51,9 +52,11 @@ typedef struct s_fork
 
 typedef struct s_philo
 {
-	int		id;
-	t_fork	*left_fork;
-	t_fork	*right_fork;
+	int				id;
+	pthread_t		thread;
+	t_fork			*left_fork;
+	t_fork			*right_fork;
+	struct s_game	*game;
 }	t_philo;
 
 typedef struct s_game
@@ -68,7 +71,7 @@ void	error_handler(int error_num, t_game *game);
 t_rules	parse_arguments(int argc, char **argv);
 int		ft_atoi(const char *str);
 int		str_is_int(char *s);
-void	timestamp(void);
+void	timestamp(t_philo *philo, char *str);
 void	free_game(t_game *game);
 void	free_forks(int num, t_fork *forks);
 void	init_game(t_game *game, t_rules *rules);

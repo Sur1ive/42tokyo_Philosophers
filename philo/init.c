@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yxu <yxu@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:37:50 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/04 16:39:10 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/04 21:21:10 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static t_fork	*init_forks(int num)
 			free_forks(i, forks);
 			return (NULL);
 		}
-		forks[i++].is_available = 1;
+		forks[i++].is_available = TRUE;
 	}
 	return (forks);
 }
@@ -62,7 +62,7 @@ static t_fork	*init_forks(int num)
 static t_philo	*init_philos(int num, t_fork *forks)
 {
 	t_philo	*philos;
-	int	i;
+	int		i;
 
 	philos = (t_philo *)malloc(sizeof(t_philo) * num);
 	if (philos == NULL)
@@ -70,12 +70,12 @@ static t_philo	*init_philos(int num, t_fork *forks)
 	i = 0;
 	while (i < num - 1)
 	{
-		philos[i].id = i;
+		philos[i].id = i + 1;
 		philos[i].right_fork = &forks[i];
 		philos[i + 1].left_fork = &forks[i];
 		i++;
 	}
-	philos[num - 1].id = num - 1;
+	philos[num - 1].id = num;
 	philos[num - 1].right_fork = &forks[num - 1];
 	philos[0].left_fork = &forks[num - 1];
 	return (philos);
@@ -85,6 +85,7 @@ void	init_game(t_game *game, t_rules *rules)
 {
 	t_fork	*forks;
 	t_philo	*philos;
+	int		i;
 
 	forks = init_forks(rules->num_of_philos);
 	if (forks == NULL)
@@ -98,4 +99,7 @@ void	init_game(t_game *game, t_rules *rules)
 	game->rules = rules;
 	game->forks = forks;
 	game->philos = philos;
+	i = 0;
+	while (i < rules->num_of_philos)
+		philos[i++].game = game;
 }
