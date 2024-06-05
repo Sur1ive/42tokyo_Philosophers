@@ -1,5 +1,5 @@
 NAME	= philo
-SRCS	= main.c utils.c lib.c init.c error.c
+SRCS	= main.c utils.c time.c init.c error.c philo.c
 OBJS	= $(SRCS:.c=.o)
 CC		= cc -Wall -Wextra -Werror -I.
 

@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 15:39:58 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/05 21:40:51 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/05 22:35:18 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,8 @@
 
 # define MAX_PHILOS 1000
 # define DOING_NOTHING 0
-# define EATING 1
-# define SLEEPING 2
-# define THINKING 3
+# define EATING_OR_SLEEPING 1
+# define THINKING 2
 # define NOT_DEFINED -1
 # define FALSE 0
 # define SUCCESS 0
@@ -74,14 +73,15 @@ typedef struct s_game
 }	t_game;
 
 size_t			ft_strlen(const char *str);
-void			error_handler(int error_num, t_game *game);
-t_rules			parse_arguments(int argc, char **argv);
 int				ft_atoi(const char *str);
 int				str_is_int(char *s);
+void			error_handler(int error_num, t_game *game);
+t_rules			parse_arguments(int argc, char **argv);
 void			timestamp(t_philo *philo, char *str);
 t_milliseconds	now(void);
-void			free_game(t_game *game);
 void			free_forks(int num, t_fork *forks);
+void			free_philos(int num, t_philo *philos);
 void			init_game(t_game *game, t_rules *rules);
+void			*life(void *philodata);
 
 #endif
