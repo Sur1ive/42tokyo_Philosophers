@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 21:58:55 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/05 22:38:48 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/05 22:49:30 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,7 @@ static void	think(t_philo *philo)
 static void	die(t_philo *philo)
 {
 	timestamp(philo, "died");
-	if (philo->game->over == FALSE)
-		error_handler(SUCCESS, philo->game);
+	error_handler(SUCCESS, philo->game);
 }
 
 void	*life(void *philodata)

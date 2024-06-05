@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:41:38 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/05 22:30:16 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/05 22:51:56 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,15 @@ void	error_handler(int error_num, t_game *game)
 
 	if (game)
 	{
-		game->over = TRUE;
-		free_forks(game->rules->num_of_philos, game->forks);
+		if (game->over == TRUE)
+			return ;
+		else
+			game->over = TRUE;
 		if (error_num == FAIL_TO_INIT)
 			free(game->philos);
 		else
 			free_philos(game->rules->num_of_philos, game->philos);
+		free_forks(game->rules->num_of_philos, game->forks);
 	}
 	if (error_num == SUCCESS)
 		exit(EXIT_SUCCESS);

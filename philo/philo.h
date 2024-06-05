@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 15:39:58 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/05 22:35:18 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/05 22:41:46 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <pthread.h>
 # include <limits.h>
 
-# define MAX_PHILOS 1000
+# define MAX_PHILOS 500
 # define DOING_NOTHING 0
 # define EATING_OR_SLEEPING 1
 # define THINKING 2
