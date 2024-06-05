@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 16:45:34 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/04 21:25:02 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/04 22:40:11 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,25 +24,34 @@ static void	*eat_and_sleep(void *philodata)
 	philo->right_fork->is_available = FALSE;
 	timestamp(philo, "has taken a fork");
 	timestamp(philo, "is eating");
+	philo->status = EATING;
 	usleep(philo->game->rules->time_to_eat * 1000);
 	pthread_mutex_unlock(&philo->left_fork->mutex);
 	philo->left_fork->is_available = TRUE;
 	pthread_mutex_unlock(&philo->right_fork->mutex);
 	philo->right_fork->is_available = TRUE;
 	timestamp(philo, "is sleeping");
+	philo->status = SLEEPING;
 	usleep(philo->game->rules->time_to_sleep * 1000);
 	return ("");
 }
 
 void	*life(void *philodata)
 {
-	t_philo	*philo;
+	t_philo		*philo;
+	pthread_t	eat_thread;
 
 	philo = (t_philo *)philodata;
+	philo->status = DOING_NOTHING;
 	while (1)
 	{
 		if (philo->left_fork->is_available && philo->right_fork->is_available)
-			eat_and_sleep(philodata);
+		{
+			pthread_create(&eat_thread, NULL, eat_and_sleep, philo);
+			pthread_detach(eat_thread);
+		}
+		else if (philo->status != THINKING)
+
 	}
 	return (NULL);
 }

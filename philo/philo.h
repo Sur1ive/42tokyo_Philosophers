@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 15:39:58 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/04 21:34:28 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/04 22:40:49 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,10 @@
 # include <limits.h>
 
 # define MAX_PHILOS 1000
+# define DOING_NOTHING 0
+# define EATING 1
+# define SLEEPING 2
+# define THINKING 3
 # define NOT_DEFINED -1
 # define FALSE 0
 # define SUCCESS 0
@@ -53,6 +57,8 @@ typedef struct s_fork
 typedef struct s_philo
 {
 	int				id;
+	int				status;
+	t_milliseconds	last;
 	pthread_t		thread;
 	t_fork			*left_fork;
 	t_fork			*right_fork;
