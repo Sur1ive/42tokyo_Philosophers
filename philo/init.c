@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:37:50 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/04 22:37:26 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/05 21:17:58 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,11 +73,13 @@ static t_philo	*init_philos(int num, t_fork *forks)
 		philos[i].id = i + 1;
 		philos[i].right_fork = &forks[i];
 		philos[i + 1].left_fork = &forks[i];
+		philos[i].status = DOING_NOTHING;
 		i++;
 	}
 	philos[num - 1].id = num;
 	philos[num - 1].right_fork = &forks[num - 1];
 	philos[0].left_fork = &forks[num - 1];
+	philos[num - 1].status = DOING_NOTHING;
 	return (philos);
 }
 
@@ -96,6 +98,7 @@ void	init_game(t_game *game, t_rules *rules)
 		free_forks(rules->num_of_philos, forks);
 		error_handler(FAIL_TO_INIT, NULL);
 	}
+	game->over = FALSE;
 	game->rules = rules;
 	game->forks = forks;
 	game->philos = philos;
