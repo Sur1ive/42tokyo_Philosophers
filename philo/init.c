@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:37:50 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/05 22:35:28 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/07 01:27:28 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ void	init_game(t_game *game, t_rules *rules)
 	game->rules = rules;
 	game->forks = forks;
 	game->philos = philos;
+	pthread_mutex_init(&game->mutex, NULL);
 	i = 0;
 	while (i < rules->num_of_philos)
 		philos[i++].game = game;

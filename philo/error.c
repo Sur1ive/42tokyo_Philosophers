@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:41:38 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/07 00:38:32 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/07 01:38:21 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,11 @@ void	free_philos(int num, t_philo *philos)
 
 	i = 0;
 	while (i < num)
-		pthread_join(philos[i++].thread, NULL);
+	{
+		if (philos->game->id != i + 1)
+			pthread_join(philos[i].thread, NULL);
+		i++;
+	}
 	free(philos);
 }
 
@@ -38,15 +42,21 @@ void	error_handler(int error_num, t_game *game)
 
 	if (game)
 	{
+		pthread_mutex_lock(&game->mutex);
 		if (game->over == TRUE)
+		{
+			pthread_mutex_unlock(&game->mutex);
 			return ;
+		}
 		else
 			game->over = TRUE;
+		pthread_mutex_unlock(&game->mutex);
 		if (error_num == FAIL_TO_INIT)
 			free(game->philos);
 		else
 			free_philos(game->rules->num_of_philos, game->philos);
 		free_forks(game->rules->num_of_philos, game->forks);
+		pthread_mutex_destroy(&game->mutex);
 	}
 	if (error_num == SUCCESS)
 		exit(EXIT_SUCCESS);

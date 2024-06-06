@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 15:39:58 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/05 22:41:46 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/07 01:35:10 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ typedef struct s_game
 	t_rules	*rules;
 	t_philo	*philos;
 	t_fork	*forks;
+	pthread_mutex_t	mutex;
+	int	id;
 }	t_game;
 
 size_t			ft_strlen(const char *str);
