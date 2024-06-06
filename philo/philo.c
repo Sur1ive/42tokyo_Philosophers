@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 21:58:55 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/07 01:35:22 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/07 01:50:44 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static void	think(t_philo *philo)
 static void	die(t_philo *philo)
 {
 	timestamp(philo, "died");
-	pthread_detach(philo->thread);
+	philo->game->thread = &philo->thread;
 	philo->game->id =philo->id;
 	error_handler(SUCCESS, philo->game);
 }

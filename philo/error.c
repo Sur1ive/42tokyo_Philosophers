@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:41:38 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/07 01:38:21 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/07 01:50:11 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	error_handler(int error_num, t_game *game)
 			free_philos(game->rules->num_of_philos, game->philos);
 		free_forks(game->rules->num_of_philos, game->forks);
 		pthread_mutex_destroy(&game->mutex);
+		pthread_detach(*game->thread);
 	}
 	if (error_num == SUCCESS)
 		exit(EXIT_SUCCESS);
