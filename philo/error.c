@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:41:38 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/05 22:51:56 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/07 00:38:32 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,7 @@ void	free_forks(int num, t_fork *forks)
 
 	i = 0;
 	while (i < num)
-	{
-		pthread_mutex_unlock(&forks[i++].mutex);
 		pthread_mutex_destroy(&forks[i++].mutex);
-	}
 	free(forks);
 }
 
