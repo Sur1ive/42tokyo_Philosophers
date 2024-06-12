@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 15:39:58 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/05 22:41:46 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/12 22:33:56 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,9 @@
 # define SUCCESS 0
 # define TRUE 1
 # define FAILURE 1
+# define INITIALIZING 0
+# define START 1
+# define OVER 2
 # define INVALID_ARGUMENTS 1
 # define TOO_MANY_PHILOS 2
 # define FAIL_TO_INIT 3
@@ -57,6 +60,7 @@ typedef struct s_philo
 {
 	int				id;
 	int				status;
+	int				extra_thread_running;
 	t_milliseconds	last_meal;
 	pthread_t		thread;
 	t_fork			*left_fork;
@@ -66,7 +70,7 @@ typedef struct s_philo
 
 typedef struct s_game
 {
-	int		over;
+	int		status;
 	t_rules	*rules;
 	t_philo	*philos;
 	t_fork	*forks;

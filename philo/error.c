@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:41:38 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/07 00:38:32 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/12 23:07:07 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,26 @@ void	free_forks(int num, t_fork *forks)
 	free(forks);
 }
 
+static int	extra_thread_running(int num, t_philo *philos)
+{
+	int	i;
+
+	i = 0;
+	while (i < num)
+	{
+		if (philos[i++].extra_thread_running == TRUE)
+			return (TRUE);
+	}
+	return (FALSE);
+}
+
 void	free_philos(int num, t_philo *philos)
 {
 	int	i;
 
+	philos->game->status = OVER;
+	while (extra_thread_running(num, philos))
+		;
 	i = 0;
 	while (i < num)
 		pthread_join(philos[i++].thread, NULL);
@@ -38,10 +54,11 @@ void	error_handler(int error_num, t_game *game)
 
 	if (game)
 	{
-		if (game->over == TRUE)
-			return ;
-		else
-			game->over = TRUE;
+		// if (game->status == OVER)
+		// 	return ;
+		// else
+		// 	game->status = OVER;
+		// 这里有bug 要用lock
 		if (error_num == FAIL_TO_INIT)
 			free(game->philos);
 		else

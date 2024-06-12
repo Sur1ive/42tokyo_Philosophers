@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 21:58:55 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/07 01:11:19 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/12 22:49:41 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ static void	*eat_and_sleep_thread(void *philodata)
 	timestamp(philo, "is sleeping");
 	usleep(philo->game->rules->time_to_sleep * 1000);
 	philo->status = DOING_NOTHING;
+	philo->extra_thread_running = FALSE;
 	return (NULL);
 }
 
@@ -41,6 +42,7 @@ static void	eat_and_sleep(t_philo *philo)
 {
 	pthread_t	eat;
 
+	philo->extra_thread_running = TRUE;
 	if (pthread_create(&eat, NULL, eat_and_sleep_thread, philo) != SUCCESS)
 		error_handler(RUNTIME_ERROR, philo->game);
 	pthread_detach(eat);
@@ -63,8 +65,10 @@ void	*life(void *philodata)
 	t_philo		*philo;
 
 	philo = (t_philo *)philodata;
+	while (philo->game->status == INITIALIZING)
+		;
 	philo->last_meal = now();
-	while (philo->game->over == FALSE)
+	while (philo->game->status == START)
 	{
 		if (philo->left_fork->is_available && philo->right_fork->is_available
 			&& philo->status != EATING_OR_SLEEPING)
