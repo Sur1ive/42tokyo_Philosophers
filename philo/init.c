@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
+/*   By: yxu <yxu@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:37:50 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/12 22:34:07 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/13 14:12:04 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void	init_game(t_game *game, t_rules *rules)
 	if (forks == NULL)
 		error_handler(FAIL_TO_INIT, NULL);
 	philos = init_philos(rules->num_of_philos, forks);
-	if (philos == NULL)
+	if (philos == NULL || pthread_mutex_init(&game->bug_lock, NULL))
 	{
 		free_forks(rules->num_of_philos, forks);
 		error_handler(FAIL_TO_INIT, NULL);

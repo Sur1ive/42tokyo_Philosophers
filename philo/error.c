@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
+/*   By: yxu <yxu@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:41:38 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/12 23:07:07 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/13 14:12:48 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,6 @@ void	error_handler(int error_num, t_game *game)
 
 	if (game)
 	{
-		// if (game->status == OVER)
-		// 	return ;
-		// else
-		// 	game->status = OVER;
 		// 这里有bug 要用lock
 		if (error_num == FAIL_TO_INIT)
 			free(game->philos);

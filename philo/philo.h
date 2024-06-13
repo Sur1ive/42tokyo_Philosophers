@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
+/*   By: yxu <yxu@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 15:39:58 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/12 22:33:56 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/13 14:09:51 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,11 @@ typedef struct s_philo
 
 typedef struct s_game
 {
-	int		status;
-	t_rules	*rules;
-	t_philo	*philos;
-	t_fork	*forks;
+	int				status;
+	t_rules			*rules;
+	t_philo			*philos;
+	t_fork			*forks;
+	pthread_mutex_t	bug_lock;
 }	t_game;
 
 size_t			ft_strlen(const char *str);
