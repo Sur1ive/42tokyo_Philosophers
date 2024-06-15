@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yxu <yxu@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 21:58:55 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/14 12:29:16 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/15 20:15:36 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,22 +16,22 @@ static void	*eat_and_sleep_thread(void *philodata)
 {
 	t_philo	*philo;
 
-// deadlock exists
+	// deadlock exists
 	philo = (t_philo *)philodata;
-	pthread_mutex_lock(&philo->left_fork->mutex);
-	philo->left_fork->is_available = FALSE;
-	timestamp(philo, "has taken a fork");
-	pthread_mutex_lock(&philo->right_fork->mutex);
-	philo->right_fork->is_available = FALSE;
-	timestamp(philo, "has taken a fork");
+	// pthread_mutex_lock(&philo->left_fork->mutex);
+	// philo->left_fork->is_available = FALSE;
+	// timestamp(philo, "has taken a fork");
+	// pthread_mutex_lock(&philo->right_fork->mutex);
+	// philo->right_fork->is_available = FALSE;
+	// timestamp(philo, "has taken a fork");
+	philo->last_meal = now() + philo->game->rules->time_to_eat;
 	timestamp(philo, "is eating");
 	philo->status = EATING_OR_SLEEPING;
 	usleep(philo->game->rules->time_to_eat * 1000);
-	philo->left_fork->is_available = TRUE;
-	pthread_mutex_unlock(&philo->left_fork->mutex);
-	philo->right_fork->is_available = TRUE;
-	pthread_mutex_unlock(&philo->right_fork->mutex);
-	philo->last_meal = now();
+	// philo->left_fork->is_available = TRUE;
+	// pthread_mutex_unlock(&philo->left_fork->mutex);
+	// philo->right_fork->is_available = TRUE;
+	// pthread_mutex_unlock(&philo->right_fork->mutex);
 	timestamp(philo, "is sleeping");
 	usleep(philo->game->rules->time_to_sleep * 1000);
 	philo->status = DOING_NOTHING;

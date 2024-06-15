@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yxu <yxu@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:37:50 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/13 14:12:04 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/15 20:43:54 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,10 @@ t_rules	parse_arguments(int argc, char **argv)
 	rules.time_to_eat = ft_atoi(argv[3]);
 	rules.time_to_sleep = ft_atoi(argv[4]);
 	if (argc == 6)
-		rules.times_each_philo_must_eat = ft_atoi(argv[5]);
+		rules.times_each_philo_must_eat
+			= min(ft_atoi(argv[5]), MAX_SUPPORT_TIMES);
 	else
-		rules.times_each_philo_must_eat = NOT_DEFINED;
+		rules.times_each_philo_must_eat = MAX_SUPPORT_TIMES;
 	return (rules);
 }
 
@@ -71,6 +72,7 @@ static t_philo	*init_philos(int num, t_fork *forks)
 	while (i < num - 1)
 	{
 		philos[i].id = i + 1;
+		philos[i].times_ate = 0;
 		philos[i].right_fork = &forks[i];
 		philos[i + 1].left_fork = &forks[i];
 		philos[i].status = DOING_NOTHING;
