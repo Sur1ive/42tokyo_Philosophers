@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 21:58:55 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/13 14:13:32 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/14 12:29:16 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ static void	*eat_and_sleep_thread(void *philodata)
 {
 	t_philo	*philo;
 
+// deadlock exists
 	philo = (t_philo *)philodata;
 	pthread_mutex_lock(&philo->left_fork->mutex);
 	philo->left_fork->is_available = FALSE;
@@ -44,7 +45,10 @@ static void	eat_and_sleep(t_philo *philo)
 
 	philo->extra_thread_running = TRUE;
 	if (pthread_create(&eat, NULL, eat_and_sleep_thread, philo) != SUCCESS)
+	{
+		philo->extra_thread_running = FALSE;
 		error_handler(RUNTIME_ERROR, philo->game);
+	}
 	pthread_detach(eat);
 }
 
@@ -78,5 +82,6 @@ void	*life(void *philodata)
 		if (now() - philo->last_meal >= philo->game->rules->time_to_die)
 			die(philo);
 	}
+	printf("philo %d is exited\n", philo->id);
 	return (NULL);
 }

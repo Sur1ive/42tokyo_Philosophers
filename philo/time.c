@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
+/*   By: yxu <yxu@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 15:45:21 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/12 22:57:31 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/13 17:17:14 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,6 @@ void	timestamp(t_philo *philo, char *str)
 	timestamp = now();
 	if (timestamp == -1)
 		error_handler(RUNTIME_ERROR, philo->game);
-	if (philo->game->status != OVER)
+	if (philo->game->status == START)
 		printf("%lu %d %s\n", timestamp, philo->id, str);
 }

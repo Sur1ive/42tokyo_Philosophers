@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 15:39:58 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/13 14:09:51 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/13 17:22:23 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 # define FAILURE 1
 # define INITIALIZING 0
 # define START 1
-# define OVER 2
+# define ERROR_HANDLING 2
 # define INVALID_ARGUMENTS 1
 # define TOO_MANY_PHILOS 2
 # define FAIL_TO_INIT 3
