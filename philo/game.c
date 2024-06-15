@@ -6,11 +6,31 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 21:32:16 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/15 21:32:35 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/15 21:47:59 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	create_philos(t_game *game)
+{
+	int		i;
+
+	i = 0;
+	while (i < game->rules->num_of_philos)
+	{
+		if (pthread_create(
+				&game->philos[i].thread, NULL, life, &game->philos[i])
+			!= SUCCESS)
+		{
+			game->status = FINISHING;
+			free_philos(i, game->philos);
+			game->philos = NULL;
+			error_handler(FAIL_TO_INIT, game);
+		}
+		i++;
+	}
+}
 
 void	*gameover_checker(void *gamedata)
 {

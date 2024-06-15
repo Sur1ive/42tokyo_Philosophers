@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:37:50 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/15 20:43:54 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/15 23:22:18 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ static t_philo	*init_philos(int num, t_fork *forks)
 	t_philo	*philos;
 	int		i;
 
+	if (forks == NULL)
+		return (NULL);
 	philos = (t_philo *)malloc(sizeof(t_philo) * num);
 	if (philos == NULL)
 		return (NULL);
@@ -88,24 +90,27 @@ static t_philo	*init_philos(int num, t_fork *forks)
 
 void	init_game(t_game *game, t_rules *rules)
 {
-	t_fork	*forks;
-	t_philo	*philos;
 	int		i;
+	int		flag1;
+	int		flag2;
 
-	forks = init_forks(rules->num_of_philos);
-	if (forks == NULL)
-		error_handler(FAIL_TO_INIT, NULL);
-	philos = init_philos(rules->num_of_philos, forks);
-	if (philos == NULL || pthread_mutex_init(&game->bug_lock, NULL))
+	game->forks = init_forks(rules->num_of_philos);
+	game->philos = init_philos(rules->num_of_philos, game->forks);
+	flag1 = pthread_mutex_init(&game->bug_lock, NULL);
+	flag2 = pthread_mutex_init(&game->time_lock, NULL);
+	if (game->forks == NULL || game->philos == NULL || flag1 || flag2)
 	{
-		free_forks(rules->num_of_philos, forks);
+		free_forks(rules->num_of_philos, game->forks);
+		free(game->philos);
+		if (flag1 == SUCCESS)
+			pthread_mutex_destroy(&game->bug_lock);
+		if (flag2 == SUCCESS)
+			pthread_mutex_destroy(&game->time_lock);
 		error_handler(FAIL_TO_INIT, NULL);
 	}
 	game->status = INITIALIZING;
 	game->rules = rules;
-	game->forks = forks;
-	game->philos = philos;
 	i = 0;
 	while (i < rules->num_of_philos)
-		philos[i++].game = game;
+		game->philos[i++].game = game;
 }
