@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 15:39:58 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/15 23:15:35 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/16 17:49:58 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 # include <limits.h>
 
 # define MAX_PHILOS 500
-# define MAX_SUPPORT_TIMES 1000000000
 
 # define DOING_NOTHING 0
 # define EATING_OR_SLEEPING 1
@@ -62,7 +61,7 @@ typedef struct s_philo
 	int				id;
 	int				status;
 	int				extra_thread_running;
-	int				times_ate;
+	long			times_ate;
 	t_milliseconds	last_meal;
 	pthread_t		thread;
 	t_fork			*left_fork;
@@ -81,7 +80,6 @@ typedef struct s_game
 	pthread_t		gameover_checker;
 }	t_game;
 
-int				min(int a, int b);
 size_t			ft_strlen(const char *str);
 int				ft_atoi(const char *str);
 int				str_is_int(char *s);
@@ -93,6 +91,7 @@ void			free_forks(int num, t_fork *forks);
 void			free_philos(int num, t_philo *philos);
 void			init_game(t_game *game, t_rules *rules);
 void			create_philos(t_game *game);
+void			create_gameover_checker(t_game *game);
 void			*life(void *philodata);
 void			*gameover_checker(void *gamedata);
 

@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:37:50 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/15 23:22:18 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/16 21:20:37 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,9 @@ t_rules	parse_arguments(int argc, char **argv)
 	rules.time_to_eat = ft_atoi(argv[3]);
 	rules.time_to_sleep = ft_atoi(argv[4]);
 	if (argc == 6)
-		rules.times_each_philo_must_eat
-			= min(ft_atoi(argv[5]), MAX_SUPPORT_TIMES);
+		rules.times_each_philo_must_eat = ft_atoi(argv[5]);
 	else
-		rules.times_each_philo_must_eat = MAX_SUPPORT_TIMES;
+		rules.times_each_philo_must_eat = -1;
 	return (rules);
 }
 
@@ -60,6 +59,19 @@ static t_fork	*init_forks(int num)
 	return (forks);
 }
 
+static t_philo	init_philo(int id, t_fork *l, t_fork *r)
+{
+	t_philo	philo;
+
+	philo.id = id;
+	philo.times_ate = 0;
+	philo.right_fork = r;
+	philo.left_fork = l;
+	philo.status = DOING_NOTHING;
+	philo.extra_thread_running = FALSE;
+	return (philo);
+}
+
 static t_philo	*init_philos(int num, t_fork *forks)
 {
 	t_philo	*philos;
@@ -70,21 +82,13 @@ static t_philo	*init_philos(int num, t_fork *forks)
 	philos = (t_philo *)malloc(sizeof(t_philo) * num);
 	if (philos == NULL)
 		return (NULL);
-	i = 0;
-	while (i < num - 1)
+	philos[0] = init_philo(0, &forks[num - 1], &forks[0]);
+	i = 1;
+	while (i < num)
 	{
-		philos[i].id = i + 1;
-		philos[i].times_ate = 0;
-		philos[i].right_fork = &forks[i];
-		philos[i + 1].left_fork = &forks[i];
-		philos[i].status = DOING_NOTHING;
-		philos[i].extra_thread_running = FALSE;
+		philos[i] = init_philo(i, &forks[i - 1], &forks[i]);
 		i++;
 	}
-	philos[num - 1].id = num;
-	philos[num - 1].right_fork = &forks[num - 1];
-	philos[0].left_fork = &forks[num - 1];
-	philos[num - 1].status = DOING_NOTHING;
 	return (philos);
 }
 

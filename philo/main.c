@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 16:45:34 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/15 21:40:17 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/16 21:13:54 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,7 @@ int	main(int argc, char **argv)
 	rules = parse_arguments(argc, argv);
 	init_game(&game, &rules);
 	create_philos(&game);
-	if (pthread_create(&game.gameover_checker, NULL, gameover_checker, &game)
-		!= SUCCESS)
-		error_handler(RUNTIME_ERROR, &game);
+	create_gameover_checker(&game);
 	game.status = START;
 	while (1)
 		;
