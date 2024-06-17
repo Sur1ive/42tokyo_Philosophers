@@ -7,7 +7,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 # $(CC) $(OBJS) -o $(NAME)
-	$(CC) $(OBJS) -o $(NAME) -fsanitize=address -pthread
+	$(CC) $(OBJS) -o $(NAME) -pthread
 
 clean:
 	rm -rf $(OBJS)

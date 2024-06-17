@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:37:50 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/16 21:20:37 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/17 23:41:02 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,11 +82,11 @@ static t_philo	*init_philos(int num, t_fork *forks)
 	philos = (t_philo *)malloc(sizeof(t_philo) * num);
 	if (philos == NULL)
 		return (NULL);
-	philos[0] = init_philo(0, &forks[num - 1], &forks[0]);
+	philos[0] = init_philo(1, &forks[num - 1], &forks[0]);
 	i = 1;
 	while (i < num)
 	{
-		philos[i] = init_philo(i, &forks[i - 1], &forks[i]);
+		philos[i] = init_philo(i + 1, &forks[i - 1], &forks[i]);
 		i++;
 	}
 	return (philos);

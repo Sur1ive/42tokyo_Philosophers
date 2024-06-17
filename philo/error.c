@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:41:38 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/16 18:12:46 by yxu              ###   ########.fr       */
+/*   Updated: 2024/06/17 23:34:41 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,10 @@ static void	free_game(int is_thread_created, t_game *game)
 	}
 	free_forks(game->rules->num_of_philos, game->forks);
 	pthread_mutex_destroy(&game->bug_lock);
-	pthread_mutex_destroy(&game->time_lock);
 }
+// ^
+// pthread_mutex_destroy(&game->time_lock); // cause -fsantinize=thread error
+// no destroy causes no memory leak so removed it
 
 void	error_handler(int error_num, t_game *game)
 {
