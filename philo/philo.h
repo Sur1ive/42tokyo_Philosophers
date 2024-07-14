@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 15:39:58 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/14 17:27:59 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/14 18:12:13 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,19 @@
 # define DOING_NOTHING 0
 # define EATING_OR_SLEEPING 1
 # define THINKING 2
+
 # define FALSE 0
-# define SUCCESS 0
 # define TRUE 1
+
+# define UNINITIALIZED -1
+
+# define SUCCESS 0
 # define FAILURE 1
+
 # define INITIALIZING 0
 # define START 1
 # define FINISHING 2
+
 # define INVALID_ARGUMENTS 1
 # define TOO_MANY_PHILOS 2
 # define FAIL_TO_INIT 3
@@ -72,12 +78,17 @@ typedef struct s_philo
 typedef struct s_game
 {
 	int				status;
-	t_rules			*rules;
+	t_rules			rules;
 	t_philo			*philos;
 	t_fork			*forks;
 	pthread_mutex_t	status_lock;
 	pthread_mutex_t	time_lock;
 	pthread_t		gameover_checker;
+	int				n_philos_inited;
+	int				n_forks_inited;
+	int				status_lock_inited;
+	int				time_lock_inited;
+	int				gameover_checker_inited;
 }	t_game;
 
 size_t			ft_strlen(const char *str);
@@ -89,7 +100,7 @@ void			timestamp(t_philo *philo, char *str);
 t_milliseconds	now(void);
 void			free_forks(int num, t_fork *forks);
 void			free_philos(int num, t_philo *philos);
-void			init_game(t_game *game, t_rules *rules);
+void			init_game(t_game *game);
 void			create_philos(t_game *game);
 void			create_gameover_checker(t_game *game);
 void			*life(void *philodata);

@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:37:50 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/14 17:20:19 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/14 18:51:35 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,31 +38,29 @@ t_rules	parse_arguments(int argc, char **argv)
 	return (rules);
 }
 
-static t_fork	*init_forks(int num)
+static void	init_forks(t_game *game)
 {
-	t_fork	*forks;
 	int		i;
 
+	game->forks = (t_fork *)malloc(sizeof(t_fork) * game->rules.num_of_philos);
+	if (game->forks == NULL)
+		error_handler(FAIL_TO_INIT, game);
 	i = 0;
-	forks = (t_fork *)malloc(sizeof(t_fork) * num);
-	if (forks == NULL)
-		return (NULL);
-	while (i < num)
+	game->n_forks_inited = 0;
+	while (i < game->rules.num_of_philos)
 	{
-		if (pthread_mutex_init(&forks[i].mutex, NULL))
-		{
-			free_forks(i, forks);
-			return (NULL);
-		}
-		forks[i++].is_available = TRUE;
+		if (pthread_mutex_init(&game->forks[i].mutex, NULL))
+			error_handler(FAIL_TO_INIT, game);
+		game->n_forks_inited++;
+		game->forks[i++].is_available = TRUE;
 	}
-	return (forks);
 }
 
-static t_philo	init_philo(int id, t_fork *l, t_fork *r)
+static t_philo	init_philo(t_game *game, int id, t_fork *l, t_fork *r)
 {
 	t_philo	philo;
 
+	philo.game = game;
 	philo.id = id;
 	philo.times_ate = 0;
 	philo.right_fork = r;
@@ -72,49 +70,45 @@ static t_philo	init_philo(int id, t_fork *l, t_fork *r)
 	return (philo);
 }
 
-static t_philo	*init_philos(int num, t_fork *forks)
+static void	init_philos(t_game *game)
 {
-	t_philo	*philos;
 	int		i;
 
-	if (forks == NULL)
-		return (NULL);
-	philos = (t_philo *)malloc(sizeof(t_philo) * num);
-	if (philos == NULL)
-		return (NULL);
-	philos[0] = init_philo(1, &forks[num - 1], &forks[0]);
+	game->philos = (t_philo *)
+		malloc(sizeof(t_philo) * game->rules.num_of_philos);
+	if (game->philos == NULL)
+		error_handler(FAIL_TO_INIT, game);
+	game->n_philos_inited = 0;
+	game->philos[0] = init_philo
+		(game, 1, &game->forks[game->rules.num_of_philos - 1], &game->forks[0]);
 	i = 1;
-	while (i < num)
+	while (i < game->rules.num_of_philos)
 	{
-		philos[i] = init_philo(i + 1, &forks[i - 1], &forks[i]);
+		game->philos[i] = init_philo
+			(game, i + 1, &game->forks[i - 1], &game->forks[i]);
 		i++;
 	}
-	return (philos);
 }
 
-void	init_game(t_game *game, t_rules *rules)
+static void	preinit_game(t_game *game)
 {
-	int		i;
-	int		flag1;
-	int		flag2;
-
-	game->forks = init_forks(rules->num_of_philos);
-	game->philos = init_philos(rules->num_of_philos, game->forks);
-	flag1 = pthread_mutex_init(&game->status_lock, NULL);
-	flag2 = pthread_mutex_init(&game->time_lock, NULL);
-	if (game->forks == NULL || game->philos == NULL || flag1 || flag2)
-	{
-		free_forks(rules->num_of_philos, game->forks);
-		free(game->philos);
-		if (flag1 == SUCCESS)
-			pthread_mutex_destroy(&game->status_lock);
-		if (flag2 == SUCCESS)
-			pthread_mutex_destroy(&game->time_lock);
-		error_handler(FAIL_TO_INIT, NULL);
-	}
+	game->n_forks_inited = UNINITIALIZED;
+	game->n_philos_inited = UNINITIALIZED;
+	game->status_lock_inited = UNINITIALIZED;
+	game->time_lock_inited = UNINITIALIZED;
+	game->gameover_checker_inited = UNINITIALIZED;
 	game->status = INITIALIZING;
-	game->rules = rules;
-	i = 0;
-	while (i < rules->num_of_philos)
-		game->philos[i++].game = game;
+}
+
+void	init_game(t_game *game)
+{
+	preinit_game(game);
+	init_forks(game);
+	init_philos(game);
+	if (pthread_mutex_init(&game->status_lock, NULL))
+		error_handler(FAIL_TO_INIT, game);
+	game->status_lock_inited = 1;
+	if (pthread_mutex_init(&game->time_lock, NULL))
+		error_handler(FAIL_TO_INIT, game);
+	game->time_lock_inited = 1;
 }

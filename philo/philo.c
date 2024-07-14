@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 21:58:55 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/14 17:33:51 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/14 18:14:51 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,14 @@ static void	*eat_and_sleep_thread(void *philodata)
 	t_philo	*philo;
 
 	philo = (t_philo *)philodata;
-	philo->last_meal = now() + philo->game->rules->time_to_eat;
+	philo->last_meal = now() + philo->game->rules.time_to_eat;
 	timestamp(philo, "is eating");
-	usleep(philo->game->rules->time_to_eat * 1000);
+	usleep(philo->game->rules.time_to_eat * 1000);
 	philo->times_ate++;
 	philo->left_fork->is_available = TRUE;
 	philo->right_fork->is_available = TRUE;
 	timestamp(philo, "is sleeping");
-	usleep(philo->game->rules->time_to_sleep * 1000);
+	usleep(philo->game->rules.time_to_sleep * 1000);
 	// usleep(100);
 	// a solution to prevent dying
 	philo->status = DOING_NOTHING;
@@ -121,7 +121,7 @@ void	*life(void *philodata)
 			philo->status = THINKING;
 			timestamp(philo, "is thinking");
 		}
-		if (now() - philo->last_meal >= philo->game->rules->time_to_die)
+		if (now() - philo->last_meal >= philo->game->rules.time_to_die)
 		{
 			timestamp(philo, "died");
 			error_handler(SUCCESS, philo->game);
