@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 15:39:58 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/14 21:58:13 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/14 22:40:56 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 
 # define MAX_PHILOS 500
 
-# define DOING_NOTHING 0
-# define EATING_OR_SLEEPING 1
+# define FREE 0
+# define BUSY 1
 # define THINKING 2
 
 # define FALSE 0
@@ -42,6 +42,7 @@
 # define TOO_MANY_PHILOS 2
 # define FAIL_TO_INIT 3
 # define RUNTIME_ERROR 4
+# define SOMEONE_DIED 5
 
 struct			s_game;
 typedef long	t_milliseconds;
@@ -95,7 +96,7 @@ typedef struct s_game
 size_t			ft_strlen(const char *str);
 int				ft_atoi(const char *str);
 int				str_is_int(char *s);
-void			error_handler(int error_num, t_game *game);
+void			error_handler(int error_num, pthread_t *thread, t_game *game);
 t_rules			parse_arguments(int argc, char **argv);
 void			timestamp(t_philo *philo, char *str);
 t_milliseconds	now(void);
