@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 15:39:58 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/14 18:12:13 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/14 21:58:13 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,10 @@
 # define FALSE 0
 # define TRUE 1
 
-# define UNINITIALIZED -1
-
 # define SUCCESS 0
 # define FAILURE 1
 
+# define UNINITIALIZED -1
 # define INITIALIZING 0
 # define START 1
 # define FINISHING 2
@@ -66,8 +65,9 @@ typedef struct s_philo
 {
 	int				id;
 	int				status;
-	int				extra_thread_running;
 	long			times_ate;
+	pthread_mutex_t	mutex;
+	int				mutex_inited;
 	t_milliseconds	last_meal;
 	pthread_t		thread;
 	t_fork			*left_fork;
@@ -85,6 +85,7 @@ typedef struct s_game
 	pthread_mutex_t	time_lock;
 	pthread_t		gameover_checker;
 	int				n_philos_inited;
+	int				n_philo_locks_inited;
 	int				n_forks_inited;
 	int				status_lock_inited;
 	int				time_lock_inited;
@@ -98,16 +99,14 @@ void			error_handler(int error_num, t_game *game);
 t_rules			parse_arguments(int argc, char **argv);
 void			timestamp(t_philo *philo, char *str);
 t_milliseconds	now(void);
-void			free_forks(int num, t_fork *forks);
-void			free_philos(int num, t_philo *philos);
 void			init_game(t_game *game);
 void			create_philos(t_game *game);
 void			create_gameover_checker(t_game *game);
 void			*life(void *philodata);
 void			*gameover_checker(void *gamedata);
-int				get_game_status(t_game *game);
-void			set_game_status(t_game *game, int status);
-int				get_philo_status(t_philo *philo);
-void			set_philo_status(t_game *philo, int status);
+int				get_mutex_value(int *p, pthread_mutex_t *lock);
+int				get_mutex_long(long *p, pthread_mutex_t *lock);
+void			set_mutex_value(int *p, int value, pthread_mutex_t *lock);
+void			set_mutex_long(long *p, long value, pthread_mutex_t *lock);
 
 #endif

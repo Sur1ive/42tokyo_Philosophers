@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 15:45:21 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/14 17:11:50 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/14 20:48:21 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,17 @@ t_milliseconds	now(void)
 void	timestamp(t_philo *philo, char *str)
 {
 	t_milliseconds	timestamp;
+	t_game			*game;
 
-	pthread_mutex_lock(&philo->game->time_lock);
+	game = philo->game;
+	pthread_mutex_lock(&game->time_lock);
 	timestamp = now();
 	if (timestamp == -1)
 	{
-		pthread_mutex_unlock(&philo->game->time_lock);
-		error_handler(RUNTIME_ERROR, philo->game);
+		pthread_mutex_unlock(&game->time_lock);
+		error_handler(RUNTIME_ERROR, game);
 	}
-	if (get_game_status(philo->game) == START)
+	if (get_mutex_value(&game->status, &game->status_lock) == START)
 		printf("%lu %d %s\n", timestamp, philo->id, str);
-	pthread_mutex_unlock(&philo->game->time_lock);
+	pthread_mutex_unlock(&game->time_lock);
 }

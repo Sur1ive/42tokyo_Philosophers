@@ -6,67 +6,68 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:41:38 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/14 18:41:37 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/14 21:31:06 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	free_forks(int n_forks_inited, t_fork *forks)
+static void	free_forks(t_game *game)
 {
 	int	i;
 
-	if (n_forks_inited == UNINITIALIZED)
+	if (game->n_forks_inited == UNINITIALIZED)
 		return ;
 	i = 0;
-	while (i < n_forks_inited)
-		pthread_mutex_destroy(&forks[i++].mutex);
-	free(forks);
+	while (i < game->n_forks_inited)
+		pthread_mutex_destroy(&game->forks[i++].mutex);
+	free(game->forks);
 }
 
-static int	extra_thread_running(int n_philos_inited, t_philo *philos)
+static int	extra_thread_running(t_game *game)
 {
 	int	i;
 
 	i = 0;
-	while (i < n_philos_inited)
+	while (i < game->n_philos_inited)
 	{
-		if (philos[i++].extra_thread_running == TRUE)
+		if (get_mutex_value(&game->philos[i].status,
+				&game->philos[i].mutex) == EATING_OR_SLEEPING)
 			return (TRUE);
+		i++;
 	}
 	return (FALSE);
 }
 
-void	free_philos(int n_philos_inited, t_philo *philos)
+static void	free_philos(t_game *game)
 {
 	int	i;
 
-	if (n_philos_inited == UNINITIALIZED)
+	if (game->n_philos_inited == UNINITIALIZED)
 		return ;
-	while (extra_thread_running(n_philos_inited, philos))
-	// except current thread
+	while (extra_thread_running(game))
 		;
 	i = 0;
-	while (i < n_philos_inited)
-		pthread_join(philos[i++].thread, NULL);
+	while (i < game->n_philos_inited)
+		pthread_join(game->philos[i++].thread, NULL);
 	// current thread need detach, not join
-	free(philos);
+	i = 0;
+	while (i < game->n_philo_locks_inited)
+		pthread_mutex_destroy(&game->philos[i++].mutex);
+	free(game->philos);
 }
 
 static void	free_game(t_game *game)
 {
 	if (game->gameover_checker_inited != UNINITIALIZED)
 		pthread_join(game->gameover_checker, NULL);
-	free_philos(game->n_philos_inited, game->philos);
-	free_forks(game->n_forks_inited, game->forks);
+	free_philos(game);
+	free_forks(game);
 	if (game->status_lock_inited != UNINITIALIZED)
 		pthread_mutex_destroy(&game->status_lock);
 	if (game->time_lock_inited != UNINITIALIZED)
 		pthread_mutex_destroy(&game->time_lock);
 }
-// ^
-// pthread_mutex_destroy(&game->time_lock); // cause -fsantinize=thread error
-// no destroy causes no memory leak so removed it
 
 void	error_handler(int error_num, t_game *game)
 {

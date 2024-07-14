@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 21:58:55 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/14 18:14:51 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/14 21:54:53 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,14 @@ static void	*eat_and_sleep_thread(void *philodata)
 	philo->last_meal = now() + philo->game->rules.time_to_eat;
 	timestamp(philo, "is eating");
 	usleep(philo->game->rules.time_to_eat * 1000);
-	philo->times_ate++;
+	set_mutex_long(&philo->times_ate, philo->times_ate + 1, &philo->mutex);
 	philo->left_fork->is_available = TRUE;
 	philo->right_fork->is_available = TRUE;
 	timestamp(philo, "is sleeping");
 	usleep(philo->game->rules.time_to_sleep * 1000);
 	// usleep(100);
 	// a solution to prevent dying
-	philo->status = DOING_NOTHING;
-	philo->extra_thread_running = FALSE;
+	set_mutex_value(&philo->status, DOING_NOTHING, &philo->mutex);
 	return (NULL);
 }
 
@@ -60,71 +59,40 @@ static void	eat_and_sleep(t_philo *philo)
 {
 	pthread_t	eat;
 
-	philo->extra_thread_running = TRUE;
-	philo->status = EATING_OR_SLEEPING;
+	set_mutex_value(&philo->status, EATING_OR_SLEEPING, &philo->mutex);
 	if (pthread_create(&eat, NULL, eat_and_sleep_thread, philo) != SUCCESS)
 	{
-		philo->extra_thread_running = FALSE;
+		set_mutex_value(&philo->status, DOING_NOTHING, &philo->mutex);
 		error_handler(RUNTIME_ERROR, philo->game);
 	}
 	pthread_detach(eat);
 }
 
-int	get_game_status(t_game *game)
-{
-	int	status;
-
-	pthread_mutex_lock(&game->status_lock);
-	status = game->status;
-	pthread_mutex_unlock(&game->status_lock);
-	return (status);
-}
-
-void	set_game_status(t_game *game, int status)
-{
-	pthread_mutex_lock(&game->status_lock);
-	game->status = status;
-	pthread_mutex_unlock(&game->status_lock);
-}
-
-// int	get_philo_status(t_philo *philo)
-// {
-// 	int	status;
-
-// 	pthread_mutex_lock(&philo->status_lock);
-// 	status = philo->status;
-// 	pthread_mutex_unlock(&philo->status_lock);
-// 	return (status);
-// }
-
-// void	set_philo_status(t_game *philo, int status)
-// {
-// 	pthread_mutex_lock(&philo->status_lock);
-// 	philo->status = status;
-// 	pthread_mutex_unlock(&philo->status_lock);
-// }
-
 void	*life(void *philodata)
 {
 	t_philo		*philo;
+	t_game		*game;
 
 	philo = (t_philo *)philodata;
-	while (get_game_status(philo->game) == INITIALIZING)
+	game = philo->game;
+	while (get_mutex_value(&game->status, &game->status_lock) == INITIALIZING)
 		;
 	philo->last_meal = now();
-	while (get_game_status(philo->game) == START)
+	while (get_mutex_value(&game->status, &game->status_lock) == START)
 	{
-		if (philo->status != EATING_OR_SLEEPING && take_forks(philo) == SUCCESS)
+		if (get_mutex_value(&philo->status, &philo->mutex)
+			!= EATING_OR_SLEEPING && take_forks(philo) == SUCCESS)
 			eat_and_sleep(philo);
-		else if (philo->status == DOING_NOTHING)
+		else if (get_mutex_value(&philo->status, &philo->mutex)
+			== DOING_NOTHING)
 		{
-			philo->status = THINKING;
+			set_mutex_value(&philo->status, THINKING, &philo->mutex);
 			timestamp(philo, "is thinking");
 		}
-		if (now() - philo->last_meal >= philo->game->rules.time_to_die)
+		if (now() - philo->last_meal >= game->rules.time_to_die)
 		{
 			timestamp(philo, "died");
-			error_handler(SUCCESS, philo->game);
+			error_handler(SUCCESS, game);
 		}
 	}
 	return (NULL);
