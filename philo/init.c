@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:37:50 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/17 23:41:02 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/14 17:20:19 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,14 +100,14 @@ void	init_game(t_game *game, t_rules *rules)
 
 	game->forks = init_forks(rules->num_of_philos);
 	game->philos = init_philos(rules->num_of_philos, game->forks);
-	flag1 = pthread_mutex_init(&game->bug_lock, NULL);
+	flag1 = pthread_mutex_init(&game->status_lock, NULL);
 	flag2 = pthread_mutex_init(&game->time_lock, NULL);
 	if (game->forks == NULL || game->philos == NULL || flag1 || flag2)
 	{
 		free_forks(rules->num_of_philos, game->forks);
 		free(game->philos);
 		if (flag1 == SUCCESS)
-			pthread_mutex_destroy(&game->bug_lock);
+			pthread_mutex_destroy(&game->status_lock);
 		if (flag2 == SUCCESS)
 			pthread_mutex_destroy(&game->time_lock);
 		error_handler(FAIL_TO_INIT, NULL);

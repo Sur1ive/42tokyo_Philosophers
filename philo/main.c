@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 16:45:34 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/16 21:13:54 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/14 17:18:47 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	main(int argc, char **argv)
 	init_game(&game, &rules);
 	create_philos(&game);
 	create_gameover_checker(&game);
-	game.status = START;
+	set_game_status(&game, START);
 	while (1)
 		;
 }

@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 15:39:58 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/16 17:49:58 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/14 17:27:59 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ typedef struct s_game
 	t_rules			*rules;
 	t_philo			*philos;
 	t_fork			*forks;
-	pthread_mutex_t	bug_lock;
+	pthread_mutex_t	status_lock;
 	pthread_mutex_t	time_lock;
 	pthread_t		gameover_checker;
 }	t_game;
@@ -94,5 +94,9 @@ void			create_philos(t_game *game);
 void			create_gameover_checker(t_game *game);
 void			*life(void *philodata);
 void			*gameover_checker(void *gamedata);
+int				get_game_status(t_game *game);
+void			set_game_status(t_game *game, int status);
+int				get_philo_status(t_philo *philo);
+void			set_philo_status(t_game *philo, int status);
 
 #endif

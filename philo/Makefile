@@ -1,7 +1,8 @@
 NAME	= philo
 SRCS	= main.c utils.c time.c init.c error.c philo.c game.c
 OBJS	= $(SRCS:.c=.o)
-CC		= cc -Wall -Wextra -Werror -I.
+# CC		= cc -Wall -Wextra -Werror -I.
+CC		= cc -I.
 
 all: $(NAME)
 

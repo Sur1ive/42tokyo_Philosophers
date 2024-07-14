@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:41:38 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/17 23:34:41 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/14 17:20:19 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void	free_philos(int num, t_philo *philos)
 	i = 0;
 	while (i < num)
 		pthread_join(philos[i++].thread, NULL);
+	// current thread need detach, not join
 	free(philos);
 }
 
@@ -63,7 +64,7 @@ static void	free_game(int is_thread_created, t_game *game)
 		free_philos(game->rules->num_of_philos, game->philos);
 	}
 	free_forks(game->rules->num_of_philos, game->forks);
-	pthread_mutex_destroy(&game->bug_lock);
+	pthread_mutex_destroy(&game->status_lock);
 }
 // ^
 // pthread_mutex_destroy(&game->time_lock); // cause -fsantinize=thread error
@@ -77,14 +78,14 @@ void	error_handler(int error_num, t_game *game)
 		free_game(FALSE, game);
 	else
 	{
-		pthread_mutex_lock(&game->bug_lock);
+		pthread_mutex_lock(&game->status_lock);
 		if (game->status == FINISHING)
 		{
-			pthread_mutex_unlock(&game->bug_lock);
+			pthread_mutex_unlock(&game->status_lock);
 			return ;
 		}
 		game->status = FINISHING;
-		pthread_mutex_unlock(&game->bug_lock);
+		pthread_mutex_unlock(&game->status_lock);
 		free_game(TRUE, game);
 	}
 	if (error_num == SUCCESS)

@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 21:58:55 by yxu               #+#    #+#             */
-/*   Updated: 2024/06/18 00:08:26 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/14 17:33:51 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ static void	*eat_and_sleep_thread(void *philodata)
 	philo->right_fork->is_available = TRUE;
 	timestamp(philo, "is sleeping");
 	usleep(philo->game->rules->time_to_sleep * 1000);
-	usleep(100);
-	// a solution
+	// usleep(100);
+	// a solution to prevent dying
 	philo->status = DOING_NOTHING;
 	philo->extra_thread_running = FALSE;
 	return (NULL);
@@ -70,15 +70,49 @@ static void	eat_and_sleep(t_philo *philo)
 	pthread_detach(eat);
 }
 
+int	get_game_status(t_game *game)
+{
+	int	status;
+
+	pthread_mutex_lock(&game->status_lock);
+	status = game->status;
+	pthread_mutex_unlock(&game->status_lock);
+	return (status);
+}
+
+void	set_game_status(t_game *game, int status)
+{
+	pthread_mutex_lock(&game->status_lock);
+	game->status = status;
+	pthread_mutex_unlock(&game->status_lock);
+}
+
+// int	get_philo_status(t_philo *philo)
+// {
+// 	int	status;
+
+// 	pthread_mutex_lock(&philo->status_lock);
+// 	status = philo->status;
+// 	pthread_mutex_unlock(&philo->status_lock);
+// 	return (status);
+// }
+
+// void	set_philo_status(t_game *philo, int status)
+// {
+// 	pthread_mutex_lock(&philo->status_lock);
+// 	philo->status = status;
+// 	pthread_mutex_unlock(&philo->status_lock);
+// }
+
 void	*life(void *philodata)
 {
 	t_philo		*philo;
 
 	philo = (t_philo *)philodata;
-	while (philo->game->status == INITIALIZING)
+	while (get_game_status(philo->game) == INITIALIZING)
 		;
 	philo->last_meal = now();
-	while (philo->game->status == START)
+	while (get_game_status(philo->game) == START)
 	{
 		if (philo->status != EATING_OR_SLEEPING && take_forks(philo) == SUCCESS)
 			eat_and_sleep(philo);
