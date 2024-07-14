@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 15:39:58 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/14 22:40:56 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/14 23:20:29 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ void			create_gameover_checker(t_game *game);
 void			*life(void *philodata);
 void			*gameover_checker(void *gamedata);
 int				get_mutex_value(int *p, pthread_mutex_t *lock);
-int				get_mutex_long(long *p, pthread_mutex_t *lock);
+long			get_mutex_long(long *p, pthread_mutex_t *lock);
 void			set_mutex_value(int *p, int value, pthread_mutex_t *lock);
 void			set_mutex_long(long *p, long value, pthread_mutex_t *lock);
 

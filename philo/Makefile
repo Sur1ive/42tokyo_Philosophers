@@ -6,8 +6,8 @@ CC		= cc -Wall -Wextra -Werror -I.
 all: $(NAME)
 
 $(NAME): $(OBJS)
-# $(CC) $(OBJS) -o $(NAME)
-	$(CC) $(OBJS) -o $(NAME) -pthread
+# $(CC) $(OBJS) -o $(NAME) -pthread --fsanitize=thread
+	$(CC) $(OBJS) -o $(NAME) -pthread -fsanitize=thread
 
 clean:
 	rm -rf $(OBJS)

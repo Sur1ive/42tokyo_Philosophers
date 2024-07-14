@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 21:58:55 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/14 21:58:30 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/14 23:20:02 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	get_mutex_value(int *p, pthread_mutex_t *lock)
 	return (value);
 }
 
-int	get_mutex_long(long *p, pthread_mutex_t *lock)
+long	get_mutex_long(long *p, pthread_mutex_t *lock)
 {
 	long	value;
 
