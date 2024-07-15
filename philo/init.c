@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
+/*   By: yxu <yxu@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:37:50 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/15 16:09:59 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/15 20:38:34 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static void	init_forks(t_game *game)
 		if (pthread_mutex_init(&game->forks[i].mutex, NULL))
 			error_handler(FAIL_TO_INIT, NULL, game);
 		game->n_forks_inited++;
-		game->forks[i++].status = TRUE;
+		game->forks[i++].status = F_AVA;
 	}
 }
 

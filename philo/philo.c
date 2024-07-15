@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
+/*   By: yxu <yxu@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 21:58:55 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/15 16:09:59 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/15 20:32:53 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,28 @@
 
 static int	take_forks(t_philo *philo)
 {
+	int	left_fork_stat;
+
 	pthread_mutex_lock(&philo->left_fork->mutex);
-	if (philo->left_fork->status == FALSE)
+	if (philo->left_fork->status == F_USING
+		|| philo->left_fork->status == F_USED_R)
 	{
 		pthread_mutex_unlock(&philo->left_fork->mutex);
 		return (FAILURE);
 	}
-	philo->left_fork->status = FALSE;
+	left_fork_stat = philo->left_fork->status;
+	philo->left_fork->status = F_USING;
 	pthread_mutex_unlock(&philo->left_fork->mutex);
 	pthread_mutex_lock(&philo->right_fork->mutex);
-	if (philo->right_fork->status == FALSE)
+	if (philo->right_fork->status == F_USING
+		|| philo->right_fork->status == F_USED_L)
 	{
 		pthread_mutex_unlock(&philo->right_fork->mutex);
 		set_mutex_value
-		(&philo->left_fork->status, TRUE, &philo->left_fork->mutex);
+		(&philo->left_fork->status, left_fork_stat, &philo->left_fork->mutex);
 		return (FAILURE);
 	}
-	philo->right_fork->status = FALSE;
+	philo->right_fork->status = F_USING;
 	pthread_mutex_unlock(&philo->right_fork->mutex);
 	timestamp(philo, "has taken a fork");
 	timestamp(philo, "has taken a fork");
@@ -48,9 +53,9 @@ static void	*eat_and_sleep_thread(void *philodata)
 	set_mutex_long(&philo->times_ate,
 		get_mutex_long(&philo->times_ate, &philo->mutex) + 1, &philo->mutex);
 	set_mutex_value
-		(&philo->left_fork->status, TRUE, &philo->left_fork->mutex);
+		(&philo->left_fork->status, F_USED_R, &philo->left_fork->mutex);
 	set_mutex_value
-		(&philo->right_fork->status, TRUE, &philo->right_fork->mutex);
+		(&philo->right_fork->status, F_USED_L, &philo->right_fork->mutex);
 	timestamp(philo, "is sleeping");
 	usleep(philo->game->rules.time_to_sleep * 1000);
 	set_mutex_value(&philo->status, P_FREE, &philo->mutex);

@@ -3,22 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
+/*   By: yxu <yxu@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 15:39:58 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/15 18:10:40 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/15 20:06:23 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-
-/*
-./philo 200 800 200 200 7
-valgrind --tool=helgrind ./philo 5 800 200 200 7
-valgrind --tool=drd ./philo 1 200 200 200
-
-fork status     LILO
-
-*/
 
 #ifndef PHILO_H
 # define PHILO_H
