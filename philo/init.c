@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:37:50 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/14 22:36:01 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/15 11:01:05 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static t_philo	init_philo(t_game *game, int id, t_fork *l, t_fork *r)
 	philo.right_fork = r;
 	philo.left_fork = l;
 	philo.status = FREE;
-	if (pthread_mutex_init(&game->philos[id - 1].mutex, NULL))
+	if (pthread_mutex_init(&philo.mutex, NULL))
 		error_handler(FAIL_TO_INIT, NULL, game);
 	game->n_philo_locks_inited++;
 	return (philo);
