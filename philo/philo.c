@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 21:58:55 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/15 14:04:57 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/15 14:24:32 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,7 @@ static void	*eat_and_sleep_thread(void *philodata)
 	t_philo	*philo;
 
 	philo = (t_philo *)philodata;
-	set_mutex_long(&philo->last_meal,
-		now() + philo->game->rules.time_to_eat, &philo->mutex);
+	set_mutex_long(&philo->last_meal, now(), &philo->mutex);
 	timestamp(philo, "is eating");
 	usleep(philo->game->rules.time_to_eat * 1000);
 	set_mutex_long(&philo->times_ate,
