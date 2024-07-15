@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:37:50 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/15 11:01:05 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/15 12:23:17 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,20 +56,20 @@ static void	init_forks(t_game *game)
 	}
 }
 
-static t_philo	init_philo(t_game *game, int id, t_fork *l, t_fork *r)
+static void	init_philo(t_game *game, int id, t_fork *l, t_fork *r)
 {
-	t_philo	philo;
+	t_philo	*philo;
 
-	philo.game = game;
-	philo.id = id;
-	philo.times_ate = 0;
-	philo.right_fork = r;
-	philo.left_fork = l;
-	philo.status = FREE;
-	if (pthread_mutex_init(&philo.mutex, NULL))
+	philo = &game->philos[id - 1];
+	philo->game = game;
+	philo->id = id;
+	philo->times_ate = 0;
+	philo->right_fork = r;
+	philo->left_fork = l;
+	philo->status = FREE;
+	if (pthread_mutex_init(&philo->mutex, NULL))
 		error_handler(FAIL_TO_INIT, NULL, game);
 	game->n_philo_locks_inited++;
-	return (philo);
 }
 
 static void	init_philos(t_game *game)
@@ -82,13 +82,12 @@ static void	init_philos(t_game *game)
 		error_handler(FAIL_TO_INIT, NULL, game);
 	game->n_philos_inited = 0;
 	game->n_philo_locks_inited = 0;
-	game->philos[0] = init_philo
+	init_philo
 		(game, 1, &game->forks[game->rules.num_of_philos - 1], &game->forks[0]);
 	i = 1;
 	while (i < game->rules.num_of_philos)
 	{
-		game->philos[i] = init_philo
-			(game, i + 1, &game->forks[i - 1], &game->forks[i]);
+		init_philo(game, i + 1, &game->forks[i - 1], &game->forks[i]);
 		i++;
 	}
 }
