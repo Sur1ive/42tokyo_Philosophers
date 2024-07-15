@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 15:39:58 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/14 23:20:29 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/15 10:38:30 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ typedef struct s_philo
 	int				status;
 	long			times_ate;
 	pthread_mutex_t	mutex;
-	int				mutex_inited;
 	t_milliseconds	last_meal;
 	pthread_t		thread;
 	t_fork			*left_fork;
