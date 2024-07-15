@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:41:38 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/14 23:31:29 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/15 16:05:21 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void	free_forks(t_game *game)
 {
 	int	i;
 
-	if (game->n_forks_inited == UNINITIALIZED)
+	if (game->n_forks_inited == G_UNINIT)
 		return ;
 	i = 0;
 	while (i < game->n_forks_inited)
@@ -32,7 +32,7 @@ static int	extra_thread_running(t_game *game)
 	while (i < game->n_philos_inited)
 	{
 		if (get_mutex_value(&game->philos[i].status,
-				&game->philos[i].mutex) == BUSY)
+				&game->philos[i].mutex) == P_BUSY)
 			return (TRUE);
 		i++;
 	}
@@ -43,7 +43,7 @@ static void	free_philos(t_game *game, pthread_t current_thread)
 {
 	int	i;
 
-	if (game->n_philos_inited == UNINITIALIZED)
+	if (game->n_philos_inited == G_UNINIT)
 		return ;
 	while (extra_thread_running(game))
 		;
@@ -62,15 +62,15 @@ static void	free_philos(t_game *game, pthread_t current_thread)
 
 static void	free_game(int error_num, pthread_t *thread, t_game *game)
 {
-	if (game->gameover_checker_inited != UNINITIALIZED)
+	if (game->gameover_checker_inited != G_UNINIT)
 		pthread_join(game->gameover_checker, NULL);
 	if (error_num != SUCCESS && thread != NULL)
 		pthread_detach(*thread);
 	free_philos(game, *thread);
 	free_forks(game);
-	if (game->status_lock_inited != UNINITIALIZED)
+	if (game->status_lock_inited != G_UNINIT)
 		pthread_mutex_destroy(&game->status_lock);
-	if (game->time_lock_inited != UNINITIALIZED)
+	if (game->time_lock_inited != G_UNINIT)
 		pthread_mutex_destroy(&game->time_lock);
 }
 
@@ -81,12 +81,12 @@ void	error_handler(int error_num, pthread_t *thread, t_game *game)
 	if (game != NULL)
 	{
 		pthread_mutex_lock(&game->status_lock);
-		if (game->status == FINISHING)
+		if (game->status == G_FINISH)
 		{
 			pthread_mutex_unlock(&game->status_lock);
 			return ;
 		}
-		game->status = FINISHING;
+		game->status = G_FINISH;
 		pthread_mutex_unlock(&game->status_lock);
 		free_game(error_num, thread, game);
 	}

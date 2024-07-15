@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:37:50 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/15 12:23:17 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/15 16:09:59 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static void	init_forks(t_game *game)
 		if (pthread_mutex_init(&game->forks[i].mutex, NULL))
 			error_handler(FAIL_TO_INIT, NULL, game);
 		game->n_forks_inited++;
-		game->forks[i++].is_available = TRUE;
+		game->forks[i++].status = TRUE;
 	}
 }
 
@@ -66,7 +66,7 @@ static void	init_philo(t_game *game, int id, t_fork *l, t_fork *r)
 	philo->times_ate = 0;
 	philo->right_fork = r;
 	philo->left_fork = l;
-	philo->status = FREE;
+	philo->status = P_FREE;
 	if (pthread_mutex_init(&philo->mutex, NULL))
 		error_handler(FAIL_TO_INIT, NULL, game);
 	game->n_philo_locks_inited++;
@@ -94,13 +94,13 @@ static void	init_philos(t_game *game)
 
 void	init_game(t_game *game)
 {
-	game->n_forks_inited = UNINITIALIZED;
-	game->n_philos_inited = UNINITIALIZED;
-	game->status_lock_inited = UNINITIALIZED;
-	game->time_lock_inited = UNINITIALIZED;
-	game->gameover_checker_inited = UNINITIALIZED;
-	game->n_forks_inited = UNINITIALIZED;
-	game->status = INITIALIZING;
+	game->n_forks_inited = G_UNINIT;
+	game->n_philos_inited = G_UNINIT;
+	game->status_lock_inited = G_UNINIT;
+	game->time_lock_inited = G_UNINIT;
+	game->gameover_checker_inited = G_UNINIT;
+	game->n_forks_inited = G_UNINIT;
+	game->status = G_INIT;
 	init_forks(game);
 	init_philos(game);
 	if (pthread_mutex_init(&game->status_lock, NULL))

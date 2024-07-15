@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 21:32:16 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/14 22:50:29 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/15 16:05:21 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	create_philos(t_game *game)
 		if (pthread_create
 			(&game->philos[i].thread, NULL, life, &game->philos[i]) != SUCCESS)
 		{
-			set_mutex_value(&game->status, FINISHING, &game->status_lock);
+			set_mutex_value(&game->status, G_FINISH, &game->status_lock);
 			error_handler(FAIL_TO_INIT, NULL, game);
 		}
 		game->n_philos_inited++;
@@ -38,7 +38,7 @@ void	*gameover_checker(void *gamedata)
 	game = (t_game *)gamedata;
 	if (game->rules.times_each_philo_must_eat == -1)
 		return (NULL);
-	while (get_mutex_value(&game->status, &game->status_lock) != FINISHING)
+	while (get_mutex_value(&game->status, &game->status_lock) != G_FINISH)
 	{
 		i = 0;
 		while (i < game->rules.num_of_philos)
@@ -60,7 +60,7 @@ void	create_gameover_checker(t_game *game)
 	if (pthread_create(&game->gameover_checker, NULL, gameover_checker, game)
 		!= SUCCESS)
 	{
-		set_mutex_value(&game->status, FINISHING, &game->status_lock);
+		set_mutex_value(&game->status, G_FINISH, &game->status_lock);
 		error_handler(FAIL_TO_INIT, NULL, game);
 	}
 	game->gameover_checker_inited = 1;

@@ -6,9 +6,19 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 15:39:58 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/15 10:38:30 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/15 18:10:40 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+
+/*
+./philo 200 800 200 200 7
+valgrind --tool=helgrind ./philo 5 800 200 200 7
+valgrind --tool=drd ./philo 1 200 200 200
+
+fork status     LILO
+
+*/
 
 #ifndef PHILO_H
 # define PHILO_H
@@ -21,28 +31,42 @@
 # include <pthread.h>
 # include <limits.h>
 
-# define MAX_PHILOS 500
+// max num of philos supported
+# define MAX_PHILOS 300
 
-# define FREE 0
-# define BUSY 1
-# define THINKING 2
+// fork status
+// not available
+# define F_USING 0
+// available
+# define F_AVA 1
+//available and recently used by left philo
+# define F_USED_L 2
+//available and recently used by right philo
+# define F_USED_R 3
+
+// philo status
+# define P_FREE 0
+# define P_BUSY 1
+# define P_THINK 2
+
+// game status
+# define G_UNINIT -1
+# define G_INIT 0
+# define G_START 1
+# define G_FINISH 2
+
+// error code
+# define INVALID_ARGUMENTS 1
+# define TOO_MANY_PHILOS 2
+# define FAIL_TO_INIT 3
+# define RUNTIME_ERROR 4
+# define SOMEONE_DIED 5
 
 # define FALSE 0
 # define TRUE 1
 
 # define SUCCESS 0
 # define FAILURE 1
-
-# define UNINITIALIZED -1
-# define INITIALIZING 0
-# define START 1
-# define FINISHING 2
-
-# define INVALID_ARGUMENTS 1
-# define TOO_MANY_PHILOS 2
-# define FAIL_TO_INIT 3
-# define RUNTIME_ERROR 4
-# define SOMEONE_DIED 5
 
 struct			s_game;
 typedef long	t_milliseconds;
@@ -58,7 +82,7 @@ typedef struct s_gamerules
 
 typedef struct s_fork
 {
-	int				is_available;
+	int				status;
 	pthread_mutex_t	mutex;
 }	t_fork;
 

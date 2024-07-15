@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 15:45:21 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/14 22:48:25 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/15 16:04:31 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	timestamp(t_philo *philo, char *str)
 		pthread_mutex_unlock(&game->time_lock);
 		error_handler(RUNTIME_ERROR, &philo->thread, game);
 	}
-	if (get_mutex_value(&game->status, &game->status_lock) == START)
+	if (get_mutex_value(&game->status, &game->status_lock) == G_START)
 		printf("%lu %d %s\n", timestamp, philo->id, str);
 	pthread_mutex_unlock(&game->time_lock);
 }
