@@ -3,16 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yxu <yxu@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 15:45:21 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/15 19:58:43 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/17 01:11:26 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-t_milliseconds	now(void)
+t_milliseconds	now_e(t_philo *philo)
+{
+	struct timeval	time_current;
+	t_milliseconds	timestamp;
+
+	if (gettimeofday(&time_current, NULL) == -1)
+		error_handler(RUNTIME_ERROR, &philo->thread, philo->game);
+	timestamp = time_current.tv_sec * 1000 + time_current.tv_usec / 1000;
+	return (timestamp);
+}
+
+static t_milliseconds	now(void)
 {
 	struct timeval	time_current;
 	t_milliseconds	timestamp;

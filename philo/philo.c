@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yxu <yxu@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 21:58:55 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/15 20:32:53 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/17 01:18:03 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,27 @@
 
 static int	take_forks(t_philo *philo)
 {
-	int	left_fork_stat;
+	int	stat_tmp;
 
-	pthread_mutex_lock(&philo->left_fork->mutex);
-	if (philo->left_fork->status == F_USING
-		|| philo->left_fork->status == F_USED_R)
+	pthread_mutex_lock(&philo->fork_l->mutex);
+	if (philo->fork_l->status == F_USING || philo->fork_l->status == F_USED_R)
 	{
-		pthread_mutex_unlock(&philo->left_fork->mutex);
+		pthread_mutex_unlock(&philo->fork_l->mutex);
 		return (FAILURE);
 	}
-	left_fork_stat = philo->left_fork->status;
-	philo->left_fork->status = F_USING;
-	pthread_mutex_unlock(&philo->left_fork->mutex);
-	pthread_mutex_lock(&philo->right_fork->mutex);
-	if (philo->right_fork->status == F_USING
-		|| philo->right_fork->status == F_USED_L)
+	stat_tmp = philo->fork_l->status;
+	philo->fork_l->status = F_USING;
+	pthread_mutex_unlock(&philo->fork_l->mutex);
+	pthread_mutex_lock(&philo->fork_r->mutex);
+	if (philo->fork_r->status == F_USING || philo->fork_r->status == F_USED_L)
 	{
-		pthread_mutex_unlock(&philo->right_fork->mutex);
+		pthread_mutex_unlock(&philo->fork_r->mutex);
 		set_mutex_value
-		(&philo->left_fork->status, left_fork_stat, &philo->left_fork->mutex);
+		(&philo->fork_l->status, stat_tmp, &philo->fork_l->mutex);
 		return (FAILURE);
 	}
-	philo->right_fork->status = F_USING;
-	pthread_mutex_unlock(&philo->right_fork->mutex);
+	philo->fork_r->status = F_USING;
+	pthread_mutex_unlock(&philo->fork_r->mutex);
 	timestamp(philo, "has taken a fork");
 	timestamp(philo, "has taken a fork");
 	return (SUCCESS);
@@ -47,15 +45,15 @@ static void	*eat_and_sleep_thread(void *philodata)
 	t_philo	*philo;
 
 	philo = (t_philo *)philodata;
-	set_mutex_long(&philo->last_meal, now(), &philo->mutex);
+	set_mutex_long(&philo->last_meal, now_e(philo), &philo->mutex);
 	timestamp(philo, "is eating");
 	usleep(philo->game->rules.time_to_eat * 1000);
 	set_mutex_long(&philo->times_ate,
 		get_mutex_long(&philo->times_ate, &philo->mutex) + 1, &philo->mutex);
 	set_mutex_value
-		(&philo->left_fork->status, F_USED_R, &philo->left_fork->mutex);
+		(&philo->fork_l->status, F_USED_R, &philo->fork_l->mutex);
 	set_mutex_value
-		(&philo->right_fork->status, F_USED_L, &philo->right_fork->mutex);
+		(&philo->fork_r->status, F_USED_L, &philo->fork_r->mutex);
 	timestamp(philo, "is sleeping");
 	usleep(philo->game->rules.time_to_sleep * 1000);
 	set_mutex_value(&philo->status, P_FREE, &philo->mutex);
@@ -75,10 +73,22 @@ static void	eat_and_sleep(t_philo *philo)
 	pthread_detach(eat);
 }
 
-static void	wait_for_start(t_game *game)
+void	update_philo_status(t_philo *philo)
 {
-	while (get_mutex_value(&game->status, &game->status_lock) == G_INIT)
-		;
+	if (get_mutex_value(&philo->status, &philo->mutex) != P_BUSY
+		&& take_forks(philo) == SUCCESS)
+		eat_and_sleep(philo);
+	else if (get_mutex_value(&philo->status, &philo->mutex) == P_FREE)
+	{
+		set_mutex_value(&philo->status, P_THINK, &philo->mutex);
+		timestamp(philo, "is thinking");
+	}
+	if (now_e(philo) - get_mutex_long(&philo->last_meal, &philo->mutex)
+		>= philo->game->rules.time_to_die)
+	{
+		timestamp(philo, "died");
+		error_handler(SOMEONE_DIED, &philo->thread, philo->game);
+	}
 }
 
 void	*life(void *philodata)
@@ -88,24 +98,13 @@ void	*life(void *philodata)
 
 	philo = (t_philo *)philodata;
 	game = philo->game;
-	wait_for_start(game);
-	philo->last_meal = now();
+	while (get_mutex_value(&game->status, &game->status_lock) == G_INIT)
+		;
+	philo->last_meal = now_e(philo);
 	while (get_mutex_value(&game->status, &game->status_lock) == G_START)
 	{
-		if (get_mutex_value(&philo->status, &philo->mutex) != P_BUSY
-			&& take_forks(philo) == SUCCESS)
-			eat_and_sleep(philo);
-		else if (get_mutex_value(&philo->status, &philo->mutex) == P_FREE)
-		{
-			set_mutex_value(&philo->status, P_THINK, &philo->mutex);
-			timestamp(philo, "is thinking");
-		}
-		if (now() - get_mutex_long(&philo->last_meal, &philo->mutex)
-			>= game->rules.time_to_die)
-		{
-			timestamp(philo, "died");
-			error_handler(SOMEONE_DIED, &philo->thread, game);
-		}
+		update_philo_status(philo);
+		usleep(1);
 	}
 	return (NULL);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yxu <yxu@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:37:50 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/15 20:38:34 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/17 00:01:07 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,8 @@ static void	init_philo(t_game *game, int id, t_fork *l, t_fork *r)
 	philo->game = game;
 	philo->id = id;
 	philo->times_ate = 0;
-	philo->right_fork = r;
-	philo->left_fork = l;
+	philo->fork_r = r;
+	philo->fork_l = l;
 	philo->status = P_FREE;
 	if (pthread_mutex_init(&philo->mutex, NULL))
 		error_handler(FAIL_TO_INIT, NULL, game);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yxu <yxu@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 15:39:58 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/15 20:06:23 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/17 01:17:46 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,8 @@ typedef struct s_philo
 	pthread_mutex_t	mutex;
 	t_milliseconds	last_meal;
 	pthread_t		thread;
-	t_fork			*left_fork;
-	t_fork			*right_fork;
+	t_fork			*fork_l;
+	t_fork			*fork_r;
 	struct s_game	*game;
 }	t_philo;
 
@@ -112,7 +112,7 @@ int				str_is_int(char *s);
 void			error_handler(int error_num, pthread_t *thread, t_game *game);
 t_rules			parse_arguments(int argc, char **argv);
 void			timestamp(t_philo *philo, char *str);
-t_milliseconds	now(void);
+t_milliseconds	now_e(t_philo *philo);
 void			init_game(t_game *game);
 void			create_philos(t_game *game);
 void			create_gameover_checker(t_game *game);
