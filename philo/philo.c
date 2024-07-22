@@ -104,7 +104,7 @@ void	*life(void *philodata)
 	while (get_mutex_value(&game->status, &game->status_lock) == G_START)
 	{
 		update_philo_status(philo);
-		usleep(1);
+		usleep(50);
 	}
 	return (NULL);
 }

@@ -6,7 +6,6 @@ CC		= cc -Wall -Wextra -Werror -I.
 all: $(NAME)
 
 $(NAME): $(OBJS)
-# $(CC) $(OBJS) -o $(NAME) -pthread -fsanitize=thread
 	$(CC) $(OBJS) -o $(NAME) -pthread
 
 clean:
