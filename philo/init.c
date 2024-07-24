@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 15:37:50 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/17 00:01:07 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/24 23:55:51 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,11 @@ static void	init_forks(t_game *game)
 		if (pthread_mutex_init(&game->forks[i].mutex, NULL))
 			error_handler(FAIL_TO_INIT, NULL, game);
 		game->n_forks_inited++;
-		game->forks[i++].status = F_AVA;
+		if (i % 2 == 0)
+			game->forks[i].status = F_USED_R;
+		else
+			game->forks[i].status = F_USED_L;
+		i++;
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: yxu <yxu@student.42tokyo.jp>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 21:58:55 by yxu               #+#    #+#             */
-/*   Updated: 2024/07/17 01:18:03 by yxu              ###   ########.fr       */
+/*   Updated: 2024/07/25 00:33:29 by yxu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ void	*life(void *philodata)
 	while (get_mutex_value(&game->status, &game->status_lock) == G_START)
 	{
 		update_philo_status(philo);
-		usleep(50);
+		usleep(game->n_philos_inited);
 	}
 	return (NULL);
 }
